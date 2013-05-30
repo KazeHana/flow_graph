@@ -1,0 +1,8 @@
+# files #
+*.class
+*.iml
+*.log
+
+# directories #
+target/
+.idea/
