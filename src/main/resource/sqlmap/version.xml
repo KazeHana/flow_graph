@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mochasoft.jsmcc.flowgraph.dao.VersionDao">
+
+	<resultMap id="BaseResultMap" type="com.mochasoft.jsmcc.flowgraph.entity.Version">
+		<id property="id" column="ID" jdbcType="BIGINT" />
+		<result property="graph" column="GRAPH" jdbcType="BIGINT" />
+        <result property="code" column="CODE" jdbcType="BIGINT" />
+        <result property="description" column="DESCRIPTION" jdbcType="VARCHAR" />
+        <result property="creator" column="CREATOR" jdbcType="VARCHAR" />
+        <result property="createAt" column="CREATE_AT" jdbcType="TIMESTAMP" />
+        <result property="parent" column="PARENT" jdbcType="BIGINT" />
+        <result property="dmo" column="DMO" jdbcType="CLOB"/>
+        <result property="lastUpdate" column="LAST_UPDATE" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="Version">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+			<![CDATA[SELECT FLOWGRAPH_S_VERSION.NEXTVAL FROM DUAL]]>
+		</selectKey>
+		<![CDATA[
+        insert into flowgraph_t_version (id, graph, code, description, creator, create_at, parent, dmo, LAST_UPDATE)
+        values (#{id}, #{graph}, #{code}, #{description,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, sysdate, #{parent}, #{dmo}, sysdate)
+        ]]>
+	</insert>
+	
+	<update id="update" parameterType="Version">
+		update flowgraph_t_version 
+		<set>
+			<if test="dmo != null" >
+		        dmo = #{dmo},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			LAST_UPDATE = sysdate
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from flowgraph_t_version where id = #{id}
+	</delete>
+
+	<select id="select" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select * from flowgraph_t_version where id = #{id}
+	</select>
+
+	<select id="selectByGraphId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from flowgraph_t_version where graph = #{graphId}
+	</select>
+	
+	<select id="selectMaxCode" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		select count(code) from  flowgraph_t_version where graph = #{graphId}
+	</select>
+
+</mapper>

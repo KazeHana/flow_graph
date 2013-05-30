@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+				"http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true" />
+    </settings>
+    <typeAliases>     
+        <typeAlias alias="Project" type="com.mochasoft.jsmcc.flowgraph.entity.Project" />
+        <typeAlias alias="Graph" type="com.mochasoft.jsmcc.flowgraph.entity.Graph" />
+        <typeAlias alias="Version" type="com.mochasoft.jsmcc.flowgraph.entity.Version"/>
+    </typeAliases>
+    <mappers>
+ 		<mapper resource="sqlmap/version.xml"/>
+		<mapper resource="sqlmap/graph.xml"/>
+		<mapper resource="sqlmap/project.xml"/>
+    </mappers>
+</configuration> 

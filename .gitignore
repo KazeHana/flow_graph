@@ -6,3 +6,6 @@
 # directories #
 target/
 .idea/
+.settings/
+.classpath
+.project

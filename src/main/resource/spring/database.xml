@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<tx:annotation-driven />
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.initSize}" />
+		<property name="maxActive" value="${jdbc.maxSize}" />
+		<property name="defaultAutoCommit" value="false" />
+	</bean>
+    
+    <!-- <bean id="flyway-init" class="com.googlecode.flyway.core.Flyway" init-method="init">
+		<property name="dataSource" ref="dataSource" />
+		<property name="table" value="FLOWGRAPH_SCHEMA" />
+	</bean> -->
+    <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
+        <property name="dataSource" ref="dataSource" />
+      	<property name="table" value="FLOWGRAPH_SCHEMA" />
+    </bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" depends-on="flyway">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+
+</beans>

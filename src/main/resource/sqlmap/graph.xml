@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mochasoft.jsmcc.flowgraph.dao.GraphDao">
+
+	<resultMap id="BaseResultMap" type="com.mochasoft.jsmcc.flowgraph.entity.Graph">
+		<id property="id" column="ID" jdbcType="BIGINT" />
+		<result property="project" column="PROJECT" jdbcType="BIGINT" />
+        <result property="name" column="NAME" jdbcType="VARCHAR" />
+        <result property="createAt" column="CREATE_AT" jdbcType="TIMESTAMP" />
+        <result property="creator" column="CREATOR" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="Graph">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+			SELECT FLOWGRAPH_S_GRAPH.NEXTVAL FROM DUAL
+		</selectKey>
+        insert into flowgraph_t_graph (id, project, name, create_at, creator)
+        values (#{id}, #{project}, #{name}, #{createAt}, #{creator})
+	</insert>
+	
+	<update id="update" parameterType="Graph">
+		update flowgraph_t_graph 
+		<set>
+			<if test="name != null" >
+		        name = #{name},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from flowgraph_t_graph where id = #{id}
+	</delete>
+	
+
+	<select id="select" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select * from flowgraph_t_graph where id = #{id}
+	</select>
+
+	<select id="selectByProjectId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from flowgraph_t_graph where project = #{projectId}
+	</select>
+
+</mapper>
